@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>JavaScript to Excel by sheet_js</title>
+</head>
+<body>
+<div class="l-wrapper">
+	<p class="btn">
+		<a href="#" id="dl_link">ダウンロード</a>
+	</p>
+</div>
+
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+  (function(){
+    'use strict';
+    let test = [
+      ['abc','def\r\n改行','2020/12/11 11:00:00'],
+      ['123',null,'456']
+    ];
+
+    let wb = XLSX.utils.book_new();
+    let sheet = XLSX.utils.aoa_to_sheet(test);
+    XLSX.utils.book_append_sheet(wb, sheet, 'シート名');
+
+    let tgt_cell = wb.Sheets['シート名']['B1'];
+    console.log(tgt_cell);
+
+    let range = wb.Sheets['シート名']['!ref'];
+    console.log(range);
+      // DL開始
+    // XLSX.writeFile(wb, 'テストです.xlsx');
+    // console.log(wb);
+
+    let wb_out = XLSX.write(wb, {bookType:'xlsx', bookSST:false, type: 'array'});
+
+    let blob = new Blob([wb_out], { type: 'application/octet-stream'});
+
+    document.getElementById("dl_link").href = window.URL.createObjectURL(blob);
+    document.getElementById("dl_link").download = 'テストです.xlsx';
+
+
+  })();
+</script>
+</body>
+</html>
